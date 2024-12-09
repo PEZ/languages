@@ -27,7 +27,7 @@ jobs:
         with:
           cli: latest
           bb: latest
-          no-auth: 'true'
+          no-auth: ${{ env.GITHUB_ACTIONS != 'true' }}
 
       # - name: Set up Python
       #   uses: actions/setup-python@v5
