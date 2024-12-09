@@ -51,11 +51,6 @@ jobs:
           compiler: gcc
           version: '13'
       
-      - name: Setup odin
-        uses: laytan/setup-odin@v2
-        with:
-          llvm-version: 17
-      
       - name: Setup Haskell
         uses: haskell-actions/setup@v2
 
@@ -87,7 +82,7 @@ jobs:
 
       - name: Install various things
         run: |
-          brew install hyperfine luajit elixir chezscheme mawk gnucobol vlang dart-sdk
+          brew install hyperfine luajit odin elixir chezscheme mawk gnucobol vlang dart-sdk
 
       - name: Install .NET SDK
         run: |
