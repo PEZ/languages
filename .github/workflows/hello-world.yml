@@ -52,9 +52,9 @@ jobs:
           version: '13'
       
       - name: Setup Lua
-        uses: xpol/setup-lua@v0.3
+        uses: leafo/gh-actions-lua@v10
         with:
-          lua-version: "luajit-2.0.5"
+          luaVersion: "luajit-2.0.5"
 
       - name: Setup odin
         uses: laytan/setup-odin@v2
