@@ -39,6 +39,11 @@ jobs:
         with:
           install-native: true
 
+      - name: Setup LLVM
+        uses: ZhongRuoyu/setup-llvm@v0
+        with:
+          llvm-version: 17
+
       - name: Set up PyPy
         uses: actions/setup-python@v5
         with:
@@ -61,7 +66,7 @@ jobs:
 
       - name: Install various things
         run: |
-          brew install elixir hyperfine odin ghc chezscheme gawk mawk gnucobol vlang zig dart-sdk
+          brew install hyperfine elixir odin ghc chezscheme mawk gnucobol vlang zig dart-sdk
 
       - name: Install .NET SDK
         run: |
