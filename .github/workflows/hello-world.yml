@@ -82,7 +82,7 @@ jobs:
 
       - name: Install various things
         run: |
-          brew install hyperfine luajit odin elixir chezscheme mawk gnucobol vlang dart-sdk
+          brew install hyperfine lua luajit odin elixir chezscheme mawk gnucobol vlang dart-sdk
 
       - name: Install .NET SDK
         run: |
