@@ -56,6 +56,20 @@ jobs:
         with:
           lua-version: "luajit-2.0.5"
 
+      - name: Setup odin
+        uses: laytan/setup-odin@v2
+        with:
+          llvm-version: 17
+      
+      - name: Setup Haskell
+        uses: haskell-actions/setup@v2
+
+      - name: Setup zig
+        uses: mlugg/setup-zig@v1
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+
       - name: Set up PyPy
         uses: actions/setup-python@v5
         with:
@@ -78,7 +92,7 @@ jobs:
 
       - name: Install various things
         run: |
-          brew install hyperfine elixir odin ghc chezscheme mawk gnucobol vlang zig dart-sdk
+          brew install hyperfine elixir chezscheme mawk gnucobol vlang dart-sdk
 
       - name: Install .NET SDK
         run: |
