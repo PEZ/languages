@@ -61,7 +61,7 @@ jobs:
 
       - name: Install various things
         run: |
-          brew install elixir hyperfine curl wget odin git ghc chezscheme gawk mawk gnucobol vlang
+          brew install elixir hyperfine odin ghc chezscheme gawk mawk gnucobol vlang zig dart
 
       - name: Install .NET SDK
         run: |
