@@ -52,7 +52,7 @@ jobs:
           version: '13'
       
       - name: Setup Lua
-        uses: xpol/setup-lua@v1
+        uses: xpol/setup-lua@v0.3
         with:
           lua-version: "luajit-2.0.5"
 
