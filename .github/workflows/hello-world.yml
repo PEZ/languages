@@ -27,7 +27,7 @@ jobs:
         with:
           cli: latest
           bb: latest
-          auth: 'false'
+          no-auth: 'false'
 
       # - name: Set up Python
       #   uses: actions/setup-python@v5
