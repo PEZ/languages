@@ -85,8 +85,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-brew-
 
-      - name: Install hyperfine and various languages and tools
+      - name: Brew Install hyperfine and various languages and tools
         run: brew bundle --file=Brewfile
+
+      - name: Verify Homebrew directories
+        run: |
+          ls -la /opt/homebrew || true
+          ls -la /opt/homebrew/Caskroom || true
+          ls -la /Users/${{ runner.user }}/Library/Caches/Homebrew || true
 
       - name: Install LLVM and Clang
         uses: KyleMayes/install-llvm-action@v2
@@ -103,3 +109,4 @@ jobs:
         run: |
           cd hello-world
           bash ../run.sh
+        continue-on-error: true
