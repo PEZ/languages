@@ -70,16 +70,16 @@ jobs:
 
       - name: Verify Homebrew directories
         run: |
-          ls -la /usr/local/Homebrew
-          ls -la /usr/local/Caskroom
-          ls -la /Users/${{ runner.user }}/Library/Caches/Homebrew
+          ls -la /opt/homebrew || true
+          ls -la /opt/homebrew/Caskroom || true
+          ls -la /Users/${{ runner.user }}/Library/Caches/Homebrew || true
 
       - name: Cache Homebrew
         uses: actions/cache@v4
         with:
           path: |
-            /usr/local/Homebrew
-            /usr/local/Caskroom
+            /opt/Homebrew
+            /opt/Caskroom
             /Users/${{ runner.user }}/Library/Caches/Homebrew
           key: ${{ runner.os }}-brew-${{ hashFiles('Brewfile') }}
           restore-keys: |
