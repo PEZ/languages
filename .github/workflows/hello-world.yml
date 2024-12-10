@@ -13,8 +13,17 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      - run: echo LOCAL ${{ env.LOCAL }}
+
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup GraalVM w/ native-image
+        uses: ayltai/setup-graalvm@v1
+        with:
+          java-version: 16
+          graalvm-version: 21.2.0
+          native-image: true
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -27,22 +36,12 @@ jobs:
         with:
           cli: latest
           bb: latest
-          # no-auth: ${{ env.GITHUB_ACTIONS != 'true' }}
-
-      # - name: Set up Python
-      #   uses: actions/setup-python@v5
-      #   with:
-      #     python-version: '3.13'
+          no-auth: ${{ env.GITHUB_ACTIONS == false }}
 
       - name: Set up kotlin
         uses: fwilhe2/setup-kotlin@main
         with:
           install-native: true
-
-      - name: Setup LLVM
-        uses: ZhongRuoyu/setup-llvm@v0
-        with:
-          llvm-version: 17
 
       - name: Setup Fortran
         uses: fortran-lang/setup-fortran@v1
@@ -51,11 +50,11 @@ jobs:
           compiler: gcc
           version: '13'
       
-      - name: Setup Haskell
-        uses: haskell-actions/setup@v2
+      # - name: Setup Haskell
+      #   uses: haskell-actions/setup@v2
 
-      - name: Setup zig
-        uses: mlugg/setup-zig@v1
+      # - name: Setup zig
+      #   uses: mlugg/setup-zig@v1
 
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
@@ -74,24 +73,25 @@ jobs:
         with:
           bun-version: '1.1.34'
 
-      - name: Set up Rust
-        uses: actions-rs/toolchain@v1
+      # - name: Set up Rust
+      #   uses: actions-rs/toolchain@v1
+      #   with:
+      #     toolchain: stable
+      #     override: true
+
+      - name: Cache Homebrew
+        uses: actions/cache@v4
         with:
-          toolchain: stable
-          override: true
+          path: |
+            /usr/local/Homebrew
+            /usr/local/Caskroom
+            /Users/${{ runner.user }}/Library/Caches/Homebrew
+          key: ${{ runner.os }}-brew-${{ hashFiles('**/Brewfile') }}
+          restore-keys: |
+            ${{ runner.os }}-brew-
 
-      - name: Install various things
-        run: |
-          brew install hyperfine lua luajit odin elixir chezscheme mawk gnucobol vlang dart-sdk
-
-      - name: Install .NET SDK
-        run: |
-          brew install --cask dotnet-sdk
-
-      - name: Install Julia
-        uses: julia-actions/setup-julia@v2
-        with:
-          version: '1.11.2'
+      - name: Install hyperfine and various languages and tools
+        run: brew bundle --file=Brewfile
 
       - name: Compile Hello World programs
         run: |
