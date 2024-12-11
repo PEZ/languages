@@ -18,6 +18,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup LLVM
+        uses: ZhongRuoyu/setup-llvm@v0
+        with:
+          llvm-version: 17
+
       - name: Setup GraalVM w/ native-image
         uses: graalvm/setup-graalvm@v1
         with:
@@ -80,11 +85,6 @@ jobs:
 
       - name: Brew Install hyperfine and various languages and tools
         run: brew bundle --file=Brewfile
-
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v2
-        with:
-          version: "17.0.6"
 
       - name: Compile Hello World programs
         run: |
