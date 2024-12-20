@@ -9,15 +9,13 @@ on:
       - main
 
 jobs:
-  hello-world:
+  setup:
     runs-on: macos-latest
 
     steps:
       - run: echo LOCAL ${{ env.LOCAL }}
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      
       - name: Setup LLVM
         uses: ZhongRuoyu/setup-llvm@v0
         with:
@@ -81,6 +79,11 @@ jobs:
       - name: Brew Install hyperfine and various languages and tools
         run: brew bundle --file=Brewfile
 
+  hello-world:
+    needs: setup
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Compile Hello World programs
         run: |
           cd hello-world
@@ -93,6 +96,11 @@ jobs:
           bash ../run.sh
         continue-on-error: true
 
+  loops:
+    needs: setup
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Compile Loops programs
         run: |
           cd loops
@@ -105,6 +113,11 @@ jobs:
           bash ../run.sh check
         continue-on-error: true
 
+  fibonacci:
+    needs: setup
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Compile Fibonacci programs
         run: |
           cd fibonacci
@@ -117,6 +130,11 @@ jobs:
           bash ../run.sh check
         continue-on-error: true
 
+  levenshtein:
+    needs: setup
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Compile Levenshtein programs
         run: |
           cd levenshtein
