@@ -16,12 +16,28 @@ jobs:
       - run: echo LOCAL ${{ env.LOCAL }}
       - uses: actions/checkout@v4
       
+      # LLVM Setup & Cache
+      - name: Cache LLVM
+        uses: actions/cache@v4
+        with:
+          path: /usr/local/opt/llvm
+          key: ${{ runner.os }}-llvm-17
       - name: Setup LLVM
+        if: steps.cache-llvm.outputs.cache-hit != 'true'
         uses: ZhongRuoyu/setup-llvm@v0
         with:
           llvm-version: 17
 
+      - name: Cache GraalVM
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.graalvm
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-graalvm-23
       - name: Setup GraalVM w/ native-image
+        if: steps.cache-graalvm.outputs.cache-hit != 'true'
         uses: graalvm/setup-graalvm@v1
         with:
           java-version: '23'
@@ -29,7 +45,15 @@ jobs:
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Cache Clojure Tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.clojure
+            ~/.m2/repository
+          key: ${{ runner.os }}-clojure-tools
       - name: Install clojure tools
+        if: steps.cache-clojure.outputs.cache-hit != 'true'
         uses: DeLaGuardo/setup-clojure@ac5052cad8ffe5039f26968da4b4a0ca88d00971
         with:
           cli: latest
@@ -42,30 +66,47 @@ jobs:
         with:
           compiler: gcc
           version: '13'
-      
-      # - name: Setup Haskell
-      #   uses: haskell-actions/setup@v2
 
-      # - name: Setup zig
-      #   uses: mlugg/setup-zig@v1
-
+      - name: Cache Dart
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-dart-cache
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
 
+      - name: Cache PyPy
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pypy-3.10
       - name: Set up PyPy
         uses: actions/setup-python@v5
         with:
           python-version: 'pypy3.10'
 
+      - name: Cache Node
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/.node-gyp
+          key: ${{ runner.os }}-node-22.11.0
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22.11.0'
 
+      - name: Cache Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun
+          key: ${{ runner.os }}-bun-1.1.34
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: '1.1.34'
 
+      # Homebrew Cache & Setup
       - name: Cache Homebrew
         uses: actions/cache@v4
         with:
@@ -75,8 +116,7 @@ jobs:
           key: ${{ runner.os }}-brew-${{ hashFiles('Brewfile') }}
           restore-keys: |
             ${{ runner.os }}-brew-
-
-      - name: Brew Install hyperfine and various languages and tools
+      - name: Brew Install
         run: brew bundle --file=Brewfile
 
   hello-world:
@@ -84,6 +124,31 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      # Restore all caches
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            /opt/Homebrew
+            /opt/Caskroom
+            /usr/local/opt/llvm
+            ~/.graalvm
+            ~/.gradle
+            ~/.clojure
+            ~/.m2
+            ~/.pub-cache
+            ~/.cache/pip
+            ~/.npm
+            ~/.node-gyp
+            ~/.bun
+          key: |
+            ${{ runner.os }}-brew-
+            ${{ runner.os }}-llvm-17
+            ${{ runner.os }}-graalvm-23
+            ${{ runner.os }}-clojure-tools
+            ${{ runner.os }}-dart-cache
+            ${{ runner.os }}-pypy-3.10
+            ${{ runner.os }}-node-22.11.0
+            ${{ runner.os }}-bun-1.1.34
       - name: Compile Hello World programs
         run: |
           cd hello-world
@@ -101,6 +166,31 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      # Restore all caches (same cache restore step as hello-world)
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            /opt/Homebrew
+            /opt/Caskroom
+            /usr/local/opt/llvm
+            ~/.graalvm
+            ~/.gradle
+            ~/.clojure
+            ~/.m2
+            ~/.pub-cache
+            ~/.cache/pip
+            ~/.npm
+            ~/.node-gyp
+            ~/.bun
+          key: |
+            ${{ runner.os }}-brew-
+            ${{ runner.os }}-llvm-17
+            ${{ runner.os }}-graalvm-23
+            ${{ runner.os }}-clojure-tools
+            ${{ runner.os }}-dart-cache
+            ${{ runner.os }}-pypy-3.10
+            ${{ runner.os }}-node-22.11.0
+            ${{ runner.os }}-bun-1.1.34
       - name: Compile Loops programs
         run: |
           cd loops
@@ -118,6 +208,31 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      # Restore all caches (same cache restore step as above)
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            /opt/Homebrew
+            /opt/Caskroom
+            /usr/local/opt/llvm
+            ~/.graalvm
+            ~/.gradle
+            ~/.clojure
+            ~/.m2
+            ~/.pub-cache
+            ~/.cache/pip
+            ~/.npm
+            ~/.node-gyp
+            ~/.bun
+          key: |
+            ${{ runner.os }}-brew-
+            ${{ runner.os }}-llvm-17
+            ${{ runner.os }}-graalvm-23
+            ${{ runner.os }}-clojure-tools
+            ${{ runner.os }}-dart-cache
+            ${{ runner.os }}-pypy-3.10
+            ${{ runner.os }}-node-22.11.0
+            ${{ runner.os }}-bun-1.1.34
       - name: Compile Fibonacci programs
         run: |
           cd fibonacci
@@ -135,6 +250,31 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      # Restore all caches (same cache restore step as above)
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            /opt/Homebrew
+            /opt/Caskroom
+            /usr/local/opt/llvm
+            ~/.graalvm
+            ~/.gradle
+            ~/.clojure
+            ~/.m2
+            ~/.pub-cache
+            ~/.cache/pip
+            ~/.npm
+            ~/.node-gyp
+            ~/.bun
+          key: |
+            ${{ runner.os }}-brew-
+            ${{ runner.os }}-llvm-17
+            ${{ runner.os }}-graalvm-23
+            ${{ runner.os }}-clojure-tools
+            ${{ runner.os }}-dart-cache
+            ${{ runner.os }}-pypy-3.10
+            ${{ runner.os }}-node-22.11.0
+            ${{ runner.os }}-bun-1.1.34
       - name: Compile Levenshtein programs
         run: |
           cd levenshtein
