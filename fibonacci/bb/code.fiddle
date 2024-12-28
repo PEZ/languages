@@ -1,0 +1,17 @@
+(time (main 30))
+(time (main 40))
+
+(def n 10)
+
+(case n
+  0 0
+  1 1
+  (+ (fibonacci (- n 1))
+     (fibonacci (- n 2))))
+
+(defn- fibonacci [n]
+  (case n
+    0 0
+    1 1
+    (+ (fibonacci (- n 1))
+       (fibonacci (- n 2)))))

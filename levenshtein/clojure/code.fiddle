@@ -1,0 +1,28 @@
+(ns code)
+
+(set! *warn-on-reflection* true)
+
+#_{:clj-kondo/ignore [:unresolved-symbol]}
+(comment
+  (time
+   (-main "abcde" "abdef" "ghijk" "gjkl" "mno" "pqr" "stu" "vwx" "yz" "banana" "oranges"))
+
+  (def input-content (slurp "levenshtein/input.txt"))
+  (def words (clojure.string/split input-content #"\s+"))
+
+  (apply -main words)
+  (time (apply -main words))
+
+  (prof/profile
+   (dotimes [i 100]
+     (print i " ")
+     (apply -main words)))
+
+  (import 'jvm.code)
+  (def a-words (into-array words))
+  (jvm.code/main a-words)
+  ;; args: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 64 efsgdvfuysgfdusydfuywguyeryoqurwreiueieieiiii
+  ;; times: 3906
+  ;; min_distance: 7
+  (time (jvm.code/main (into-array words)))
+  :rcf)

@@ -1,0 +1,6 @@
+{:paths ["levenshtein" "fibonacci" "loops" "hello-world"] 
+ :deps {org.clojure/clojure {:mvn/version "1.12.0"}}
+ :aliases {:bench {:extra-deps {criterium/criterium {:mvn/version "0.4.6"}
+                                com.clojure-goes-fast/clj-java-decompiler {:mvn/version "0.3.6"}
+                                com.clojure-goes-fast/clj-async-profiler {:mvn/version "1.5.1"}}
+                   :jvm-opts ["-Djdk.attach.allowAttachSelf", "-XX:-DoEscapeAnalysis"]}}}
